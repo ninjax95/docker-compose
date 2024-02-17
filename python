@@ -8,6 +8,8 @@ services:
       - "8000:8000"  # Expose le port 8000 du conteneur sur le port 8000 de l'hôte (ajuster selon l'application)
     networks:
       - my_lanhome
+    tty: true  # Alloue un pseudo-TTY, ce qui te permet d'attacher un terminal au conteneur.
+    stdin_open: true  # Garde STDIN ouvert, même sans attachement, ce qui te permet d'interagir avec le prompt.
 
 networks:
   my_lanhome:
