@@ -1,73 +1,44 @@
-version: '3.7'
+version: '3'
 
 services:
   awx_web:
-    image: ansible/awx_web:latest
-    container_name: awx_web
+    image: ansible/awx:19.2.2
     ports:
       - "8052:8052"
     environment:
-      DATABASE_HOST: awx_postgres
+      AWX_SECRET_KEY: awxsecret
+      DATABASE_USER: awx
       DATABASE_PASSWORD: awxpass
       DATABASE_NAME: awx
-      DATABASE_USER: awx
-      DATABASE_PORT: "5432"
-      #SECRET_KEY: awxsecret
-      SECRET_KEY: )d&czm_ub2dm2#&7z95=c=*a6qdgn*ci&ant)h!f&ioxm%)%_-
-      MEMCACHED_HOST: awx_memcached
-      RABBITMQ_HOST: awx_rabbitmq
+      DATABASE_PORT: 5432
+      DATABASE_HOST: awx_postgres
+    depends_on:
+      - awx_postgres
     networks:
       - my_lanhome
-   
 
   awx_task:
-    image: ansible/awx_task:latest
-    container_name: awx_task
+    image: ansible/awx:19.2.2
     environment:
-      DATABASE_HOST: awx_postgres
+      AWX_SECRET_KEY: awxsecret
+      DATABASE_USER: awx
       DATABASE_PASSWORD: awxpass
       DATABASE_NAME: awx
-      DATABASE_USER: awx
-      DATABASE_PORT: "5432"
-      SECRET_KEY: )d&czm_ub2dm2#&7z95=c=*a6qdgn*ci&ant)h!f&ioxm%)%_-
-      MEMCACHED_HOST: awx_memcached
-      RABBITMQ_HOST: awx_rabbitmq
+      DATABASE_PORT: 5432
+      DATABASE_HOST: awx_postgres
+    depends_on:
+      - awx_postgres
     networks:
       - my_lanhome
 
   awx_postgres:
     image: postgres:12
-    container_name: awx_postgres
     environment:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: awxpass
       POSTGRES_DB: awx
-    networks:
-      - my_lanhome
-
-  awx_ansible:
-    image: cytopia/ansible:latest
-    container_name: awx_interactive
     volumes:
-      - ./ansible:/ansible
-      - ~/.ssh:/root/.ssh:ro
-    working_dir: /ansible
-    tty: true
-    stdin_open: true
-    environment:
-      ANSIBLE_HOST_KEY_CHECKING: "False"
-    networks:
-      - my_lanhome
-
-  awx_memcached:
-    image: memcached:alpine
-    container_name: awx_memcached
-    networks:
-      - my_lanhome
-
-  awx_rabbitmq:
-    image: rabbitmq:3
-    container_name: awx_rabbitmq
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - my_lanhome
 
