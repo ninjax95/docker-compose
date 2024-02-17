@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   awx_web:
-    image: ansible/awx:19.2.2
+    image: ansible/awx_web:latest
     container_name: ansible_awxweb
     ports:
       - "8052:8052"
@@ -17,7 +17,7 @@ services:
       - my_lanhome
 
   awx_task:
-    image: ansible/awx:19.2.2
+    image: ansible/awx_task:latest
     container_name: ansible_awxtask
     environment:
       DATABASE_HOST: awx_postgres
