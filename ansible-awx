@@ -2,7 +2,7 @@ version: '3'
 
 services:
   awx_web:
-    image: ansible/awx:19.2.2
+    image: ansible/awx:1
     ports:
       - "8052:8052"
     environment:
