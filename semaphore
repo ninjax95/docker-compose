@@ -1,0 +1,45 @@
+version: '3'
+services:
+  semaphore:
+    image: ansiblesemaphore/semaphore:latest
+    ports:
+      - "3000:3000"
+    environment:
+      SEMAPHORE_DB_HOST: db
+      SEMAPHORE_DB_PORT: "3306"
+      SEMAPHORE_DB_USER: semaphore
+      SEMAPHORE_DB_PASS: semaphorepassword
+      SEMAPHORE_DB_NAME: semaphore
+      SEMAPHORE_PLAYBOOK_PATH: /playbooks
+    container_name: semaphore
+    tty: true  # Alloue un pseudo-TTY, ce qui te permet d'attacher un terminal au conteneur.
+    stdin_open: true  # Garde STDIN ouvert, même sans attachement, ce qui te permet d'interagir avec le prompt.
+    volumes:
+      - ./playbooks:/playbooks
+      - ./semaphore_config:/root/.config/semaphore
+    depends_on:
+      - db
+    networks:
+      - my_lanhome
+
+  db:
+    image: mariadb:10
+    container_name: semaphore_db
+    tty: true  # Alloue un pseudo-TTY, ce qui te permet d'attacher un terminal au conteneur.
+    stdin_open: true  # Garde STDIN ouvert, même sans attachement, ce qui te permet d'interagir avec le prompt.
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: semaphorepassword
+    volumes:
+      - semaphore_db:/var/lib/mysql
+    networks:
+      - my_lanhome
+
+volumes:
+  semaphore_db:
+
+networks:
+  my_lanhome:
+    external: true
