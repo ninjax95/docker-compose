@@ -53,6 +53,15 @@ services:
     networks:
       - my_lanhome
 
+  awx_memcached:
+    image: memcached:alpine
+    container_name: awx_memcached
+
+  awx_rabbitmq:
+    image: rabbitmq:3
+    container_name: awx_rabbitmq
+   
+
 volumes:
   postgres_data:
 
