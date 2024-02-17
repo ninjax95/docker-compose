@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nessus:
+    image: tenable/nessus:latest-ubuntu
+    ports:
+      - "8834:8834"
+    volumes:
+      - nessus_data:/opt/nessus
+    environment:
+      - NESSUS_UID=1000
+      - NESSUS_GID=1000
+    restart: always
+
+volumes:
+  nessus_data:
+
+
