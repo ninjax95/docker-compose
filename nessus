@@ -18,6 +18,10 @@ services:
 volumes:
   nessus_data:
 
+networks:
+  my_lanhome:
+    external: true
+
 
 
 
