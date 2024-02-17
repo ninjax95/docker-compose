@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  ansible:
+    image: ansible/ansible-runner:latest
+    container_name: ansible_runner
+    volumes:
+      - ./playbooks:/playbooks
+      - ~/.ssh:/root/.ssh:ro
+    working_dir: /playbooks
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: "False"
+    command: ansible-playbook main.yml -i inventory
+    networks:
+      - my_lanhome    
+
+volumes:
+  playbooks:
+    driver: local
+  ssh_keys:
+    driver: local
+
+networks:
+  my_lanhome:
+    external: true
