@@ -3,6 +3,7 @@ version: '3.7'
 services:
   awx_web:
     image: ansible/awx:19.2.2
+    container_name: ansible_awxweb
     ports:
       - "8052:8052"
     environment:
@@ -17,6 +18,7 @@ services:
 
   awx_task:
     image: ansible/awx:19.2.2
+    container_name: ansible_awxtask
     environment:
       DATABASE_HOST: awx_postgres
       DATABASE_PASSWORD: awxpass
@@ -29,6 +31,7 @@ services:
 
   awx_postgres:
     image: postgres:12
+    container_name: ansible_awxpostgres
     environment:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: awxpass
