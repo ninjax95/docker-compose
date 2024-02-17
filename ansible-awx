@@ -3,7 +3,7 @@ version: '3.7'
 services:
   awx_web:
     image: ansible/awx_web:latest
-    container_name: ansible_awxweb
+    container_name: awx_web
     ports:
       - "8052:8052"
     environment:
@@ -14,25 +14,30 @@ services:
       DATABASE_PORT: "5432"
       #SECRET_KEY: awxsecret
       SECRET_KEY: )d&czm_ub2dm2#&7z95=c=*a6qdgn*ci&ant)h!f&ioxm%)%_-
+      MEMCACHED_HOST: awx_memcached
+      RABBITMQ_HOST: awx_rabbitmq
     networks:
       - my_lanhome
+   
 
   awx_task:
     image: ansible/awx_task:latest
-    container_name: ansible_awxtask
+    container_name: awx_task
     environment:
       DATABASE_HOST: awx_postgres
       DATABASE_PASSWORD: awxpass
       DATABASE_NAME: awx
       DATABASE_USER: awx
       DATABASE_PORT: "5432"
-      SECRET_KEY: awxsecret
+      SECRET_KEY: )d&czm_ub2dm2#&7z95=c=*a6qdgn*ci&ant)h!f&ioxm%)%_-
+      MEMCACHED_HOST: awx_memcached
+      RABBITMQ_HOST: awx_rabbitmq
     networks:
       - my_lanhome
 
   awx_postgres:
     image: postgres:12
-    container_name: ansible_awxpostgres
+    container_name: awx_postgres
     environment:
       POSTGRES_USER: awx
       POSTGRES_PASSWORD: awxpass
@@ -40,9 +45,9 @@ services:
     networks:
       - my_lanhome
 
-  ansible:
+  awx_ansible:
     image: cytopia/ansible:latest
-    container_name: ansible_interactive
+    container_name: awx_interactive
     volumes:
       - ./ansible:/ansible
       - ~/.ssh:/root/.ssh:ro
@@ -57,11 +62,14 @@ services:
   awx_memcached:
     image: memcached:alpine
     container_name: awx_memcached
+    networks:
+      - my_lanhome
 
   awx_rabbitmq:
     image: rabbitmq:3
     container_name: awx_rabbitmq
-   
+    networks:
+      - my_lanhome
 
 volumes:
   postgres_data:
