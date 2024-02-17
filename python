@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  python_app:
+    image: python:3.9  # Utilise l'image officielle Python avec la version souhaitée
+    container_name: python
+    volumes:
+      - ./app:/app  # Montage du répertoire de travail local dans le conteneur
+    working_dir: /app  # Définit /app comme répertoire de travail dans le conteneur
+    ports:
+      - "8000:8000"  # Expose le port 8000 du conteneur sur le port 8000 de l'hôte (ajuster selon l'application)
+
+networks:
+  my_lanhome:
+    external: true
