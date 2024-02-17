@@ -13,6 +13,7 @@ services:
     networks:
       - my_lanhome
     container_name: elastic
+    restart: always
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.1
@@ -25,6 +26,7 @@ services:
     networks:
       - my_lanhome
     container_name: kibana
+    restart: always
 
 volumes:
   esdata1:
