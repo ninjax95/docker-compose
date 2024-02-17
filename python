@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   python_app:
-    image: python:3.9  # Utilise l'image officielle Python avec la version souhaitée
+    image: python:latest  # Utilise l'image officielle Python avec la version souhaitée
     container_name: python
     volumes:
       - ./app:/app  # Montage du répertoire de travail local dans le conteneur
