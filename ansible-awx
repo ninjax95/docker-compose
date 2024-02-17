@@ -12,7 +12,8 @@ services:
       DATABASE_NAME: awx
       DATABASE_USER: awx
       DATABASE_PORT: "5432"
-      SECRET_KEY: awxsecret
+      #SECRET_KEY: awxsecret
+      SECRET_KEY: )d&czm_ub2dm2#&7z95=c=*a6qdgn*ci&ant)h!f&ioxm%)%_-
     networks:
       - my_lanhome
 
