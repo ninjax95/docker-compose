@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   ansible:
-    image: ansible/ansible-runner:latest
-    container_name: ansible_runner
+    image: pipelinecomponents/ansible-lint:latest
+    container_name: ansible_lint
     volumes:
       - ./playbooks:/playbooks
       - ~/.ssh:/root/.ssh:ro
