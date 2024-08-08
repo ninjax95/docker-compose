@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: netbox_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: netbox
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: netbox_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - netbox_network
+
+  redis:
+    image: redis:alpine
+    container_name: netbox_redis
+    restart: unless-stopped
+    networks:
+      - netbox_network
+
+  netbox:
+    image: netboxcommunity/netbox:latest
+    container_name: netbox
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: netbox_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      ALLOWED_HOSTS: '*'
+      SUPERUSER_NAME: admin
+      SUPERUSER_EMAIL: admin@example.com
+      SUPERUSER_PASSWORD: admin_password
+      SECRET_KEY: ${SECRET_KEY:-$(python /opt/netbox/netbox/generate_secret_key.py)}
+    volumes:
+      - netbox_data:/opt/netbox/netbox/media
+    networks:
+      - netbox_network
+    ports:
+      - "8000:8080"
+
+  netbox_worker:
+    image: netboxcommunity/netbox:latest
+    container_name: netbox_worker
+    restart: unless-stopped
+    depends_on:
+      - netbox
+    entrypoint: /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py rqworker
+    environment:
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: netbox_password
+      DB_WAIT_TIMEOUT: 60
+      DB_WAIT_DEBUG: 1
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - netbox_network
+
+volumes:
+  postgres_data:
+  netbox_data:
+
+networks:
+  netbox_network:
